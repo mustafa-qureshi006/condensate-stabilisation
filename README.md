@@ -6,13 +6,13 @@ Before the condensate from the high-pressure upstream separator can be stored it
 
 ## Design Basis
 
-The feed to the stabilisation train is condensate received from a high-pressure upstream separator arriving at 100 bar and 40°C. These conditions closely represent the liquid leaving the first stage of gas-liquid separation at the wellhead. The stream has already been separated from the bulk of the gas but due to it being separated at high pressure it still contains light hydrocarbons dissolved within it. The mass flow rate is set to 50 kg/s which was converted using a liquid density of 565 kg/m3 and thus a feed rate of approximately 48,100 bbl/d. This would produce around 33,100 bbl/d using the final product stream flow rate and density of 36 kg/s and 601 kg/m3 respectively. This places the design at the scale of a mid-sized production facility rather than a pilot plant.
+The feed to the stabilisation train is condensate received from a high-pressure upstream separator arriving at 100 bar and 40°C. These conditions closely represent the liquid leaving the first stage of gas-liquid separation at the wellhead. The stream has already been separated from the bulk of the gas but due to it being separated at high pressure it still contains light hydrocarbons dissolved within it. The mass flow rate is set to 50 kg/s. Using the standard liquid volume flows reported by HYSYS, this corresponds to a feed rate of approximately 48,100 bbl/d and a stabilised product output of approximately 33,100 bbl/d. This places the design at the scale of a mid-sized production facility rather than a pilot plant.
 
 The feed is modelled as a five component mixture of methane, ethane, propane, n-butane and n-pentane at 5, 10, 15, 35 and 35 mole percent respectively. This is a simplified mixture and not a real condensate assay and the simplification was chosen to verify the pressures effect on the final composition. Not only this, restricting the feed to five pure components allows for the behaviour of each stage to be traced directly to the volatility of the component. The trade off is that the modelled liquid is significantly lighter and more volatile than a real condensate would be.
 
 The configuration is a three stage flash where the pressure goes from 100 to 10 bar then to 3.2 bar and finally 1.013 bar. The flash being in stages rather than flashing straight to atmospheric pressure retains more of the heavier components (propane and butane) in the liquid. A single large flash would remove a considerable amount of these including the methane and ethane whereas staged flashes at smaller pressure drops would allow the light hydrocarbons to leave progressively whilst the heavier more valuable components stay in the liquid.
 
-For safe storage a target of 1.013 bar (atmospheric pressure) was needed at the final operating stage. The initial ratio may seem aggressive at a pressure ratio of 10 compared to the approximate 3.1 for the second and third stages but the feed's bubble point at 40°C is around 18 bar. This was determined by flashing the feed at successively lower pressures at constant temperature and composition and identifying when the vapour fraction becomes non-zero. This was done in 1 bar intervals and the bubble point was placed in between 17 and 18 bar. Across most of the first drop, from 100 bar down to the bubble point the stream is a compressed liquid with no vapour and reducing its pressure does not induce a state change. Flashing only starts once the pressure falls below the bubble point so the only part that actually generates any vapour is from the 18 bar to 10 bar drop which is a ratio of 1.8 which is a much more effective ratio. In terms of phase change this would mean the first stage is the gentlest out of the three rather than the most severe.
+For safe storage a target of 1.013 bar (atmospheric pressure) was needed at the final operating stage. The initial ratio may seem aggressive at a pressure ratio of 10 compared to the approximate 3.1 for the second and third stages but the feed's bubble point at 40°C is approximately 17.7 bar, taken from the phase envelope generated in Aspen HYSYS. This was also confirmed by flashing the feed at successively lower pressures at constant temperature and composition and identifying when the vapour fraction becomes non-zero. This was done in 1 bar intervals and the bubble point was placed in between 17 and 18 bar. Across most of the first drop, from 100 bar down to the bubble point the stream is a compressed liquid with no vapour and reducing its pressure does not induce a state change. Flashing only starts once the pressure falls below the bubble point so the only part that actually generates any vapour is from the 17.7 bar to 10 bar drop which is a ratio of around 1.8 which is a much more effective ratio. In terms of phase change this would mean the first stage is the gentlest out of the three rather than the most severe.
 
 ## Process Description
 
@@ -32,18 +32,18 @@ Peng-Robinson was selected as the property package in both simulations (Aspen HY
 
 Activity-coefficient models such as NRTL and UNIQUAC were ruled out as those are suited for polar non-ideal liquid mixtures thus unsuited for a pure hydrocarbon system.
 
-The cubic equations of state (EOS) predict phase equilibrium accurately but a weakness was discovered during this work where they predict less accurate liquid densities. The simulators handle this by applying a separate density correlation or a volume correction (COSTALD in HYSYS) rather than taking the value from the EOS. This shows up in the cross-validation where they both agree on the phase split but differ on liquid densities. 
+The cubic equations of state (EOS) predict phase equilibrium well but are less reliable for liquid density, so simulators usually calculate density using a separate correlation rather than taking it from the EOS (COSTALD in HYSYS). For this reason, the cross-validation below compares the two simulators mainly on phase split.
 
 ## Results
 
-|                    | Unit     | Inlet   | 2       | 3       | 4       | 5       | 6       | Vap Outlet 1 | Vap Outlet 2 | Vap Outlet 3 | Product |
-|--------------------|----------|---------|---------|---------|---------|---------|---------|--------------|--------------|--------------|---------|
-| Vapour Fraction    |          | 0.00    | 0.09    | 0.00    | 0.17    | 0.00    | 0.15    | 1.00         | 1.00         | 1.00         | 0.00    |
-| Temperature        | °C       | 40.00   | 34.66   | 34.66   | 16.75   | 16.75   | -3.71   | 34.66        | 16.75        | -3.71        | -3.71   |
-| Pressure           | kPa      | 10000   | 1000    | 1000    | 320     | 320     | 101.325 | 1000         | 320          | 101.325      | 101.325 |
-| Molar Flow         | kgmole/h | 3213.14 | 3213.14 | 2910.91 | 2910.91 | 2427.69 | 2427.69 | 302.24       | 483.21       | 358.77       | 2068.92 |
-| Mass Flow          | kg/h     | 180000  | 180000  | 169790  | 169790  | 149313  | 149313  | 10210        | 20477        | 17632        | 131681  |
-| Liquid Volume Flow | m3/h     | 318.65  | 318.65  | 295.06  | 295.06  | 252.62  | 252.62  | 23.59        | 42.44        | 33.57        | 219.05  |
+|                        | Unit     | Inlet   | 2       | 3       | 4       | 5       | 6       | Vap Outlet 1 | Vap Outlet 2 | Vap Outlet 3 | Product |
+|------------------------|----------|---------|---------|---------|---------|---------|---------|--------------|--------------|--------------|---------|
+| Vapour Fraction        |          | 0.00    | 0.09    | 0.00    | 0.17    | 0.00    | 0.15    | 1.00         | 1.00         | 1.00         | 0.00    |
+| Temperature            | °C       | 40.00   | 34.66   | 34.66   | 16.75   | 16.75   | -3.71   | 34.66        | 16.75        | -3.71        | -3.71   |
+| Pressure               | kPa      | 10000   | 1000    | 1000    | 320     | 320     | 101.325 | 1000         | 320          | 101.325      | 101.325 |
+| Molar Flow             | kgmole/h | 3213.14 | 3213.14 | 2910.91 | 2910.91 | 2427.69 | 2427.69 | 302.24       | 483.21       | 358.77       | 2068.92 |
+| Mass Flow              | kg/h     | 180000  | 180000  | 169790  | 169790  | 149313  | 149313  | 10210        | 20477        | 17632        | 131681  |
+| Std Liquid Volume Flow | m3/h     | 318.65  | 318.65  | 295.06  | 295.06  | 252.62  | 252.62  | 23.59        | 42.44        | 33.57        | 219.05  |
 
 Mass balance - Equates to 180,000 kg/h of feed against 131,681 kg/h of product and 48,319 kg/h across all three vapour outlets. 
 
@@ -66,15 +66,15 @@ Feed temperature was varied at 40, 60 and 80°C and pressure, composition and ma
 
 | Feed Temp | n-Butane retained | n-Pentane retained |
 |-----------|-------------------|--------------------|
-| 40°C      | 73.1%             | 91.5%              |
-| 60°C      | 60.7%             | 85.7%              |
-| 80°C      | 47.6%             | 77.7%              |
+| 40°C      | 74.4%             | 91.9%              |
+| 60°C      | 62.4%             | 86.2%              |
+| 80°C      | 49.6%             | 78.4%              |
 
 40°C is the base case.
 
-The table above shows that n-butane retention falls by around 26 percentage points as feed temperature rises. This is due to a hotter feed carrying more enthalpy into each flash so more of every component vaporises including the desirable product. The train doesn't get more selective when at higher temperature, it just flashes more of each component.
+The table above shows that n-butane retention falls by around 25 percentage points as feed temperature rises. This is due to a hotter feed carrying more enthalpy into each flash so more of every component vaporises including the desirable product. The train doesn't get more selective when at higher temperature, it just flashes more of each component.
 
-Cooling the feed upstream is a practical way to retain more saleable liquid.
+A cooler feed retains more saleable liquid, but that liquid also carries more of the lighter components, raising its vapour pressure. Real stabilisers therefore balance liquid yield against meeting a vapour pressure specification.
 
 ## Cross Validation
 
@@ -90,15 +90,15 @@ To confirm that the results were not an artefact of a single simulator, the same
 
 Product temperature: -3.71°C against -5.11°C (HYSYS and DWSIM respectively).
 
-Liquid density: 601 against 618 kg/m3 for the product (HYSYS and DWSIM respectively).
+Liquid density: 624.9 against 618.6 kg/m3 for the product (HYSYS and DWSIM respectively).
 
-The two simulations agree on phase split with the difference staying within 3 percentage points. The largest discrepancy is in liquid density. HYSYS calculates liquid density using the COSTALD correlation while the DWSIM property package is configured to use the Rackett correlation combined with experimental component data. The density difference therefore reflects two different correlations rather than a difference in the phase equilibrium.
+The two simulations agree on phase split, with component retention within 3 percentage points. An earlier version of this comparison reported a larger density difference, but it compared a standard liquid density from HYSYS against an actual density from DWSIM. Thus both simulators agree within about 1%.
 
 ## Conclusion
 
 A three-stage separator train was designed to stabilise a 50 kg/s condensate feed from 100 bar to atmospheric storage. The train achieves this by removing 99.9% of the methane and 93.4% of the ethane. Methane and ethane raise the product's vapour pressure thus having to be removed before storage. This however did come at the cost of 25.6% of the n-butane and 8.1% of the n-pentane which is a significant quantity of saleable liquid.
 
-Feed temperature was found to be a significant variable in the final yield of saleable products. Raising the temperature by 20°C caused a drop of around 13 percentage points each time for n-butane (tested from the range of 40°C to 80°C with 40°C as the base). This indicates that cooling the feed upstream is a practical way to retain more product.
+Feed temperature was found to be a significant variable in the final yield of saleable products. Raising the temperature by 20°C caused a drop of around 12-13 percentage points each time for n-butane (tested from the range of 40°C to 80°C with 40°C as the base).
 
 The model was built in two simulators (Aspen HYSYS and DWSIM). They both agree on the phase equilibrium and agree on product retention within 3 percentage points.
 
@@ -110,9 +110,7 @@ The model was built in two simulators (Aspen HYSYS and DWSIM). They both agree o
 
 - In reality the vessels would not be adiabatic as some heat would be exchanged with the surroundings.
 
-- Product leaves at -3.7°C which may be too cold for storage.
-
-- The product's vapour pressure was not calculated. In reality stabilisation targets a vapour pressure specification. Removing the light components is evidence that it is stabilised but does not confirm that it meets specification.
+- The product leaves the final stage at its bubble point at -3.7°C, so it would begin to vaporise as it warms to storage temperature. As modelled it is not fully stabilised. A real design would heat the condensate before the final stage so that it flashes at or above storage temperature, and would confirm that the product meets a vapour pressure specification.
 
 ## Repository Structure
 ```
